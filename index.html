@@ -15,8 +15,39 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;0,700;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- ditaruh di head supaya loader langsung tampil & scroll dikunci sejak awal -->
+  <script>document.documentElement.classList.add('js', 'is-loading');</script>
 </head>
 <body>
+
+  <!-- ============ LOADER: awan menutup layar lalu membelah ============ -->
+  <div class="loader" role="status" aria-label="Memuat halaman">
+    <div class="loader__half loader__half--left" aria-hidden="true">
+      <img class="loader__cloud" src="assets/img/deco/awan-polos-1.webp" alt="" style="--top:-8%; --edge:-18%;">
+      <img class="loader__cloud" src="assets/img/deco/awan-kiri-ornamen.webp" alt="" style="--top:16%; --edge:-26%;">
+      <img class="loader__cloud" src="assets/img/deco/awan-polos-1.webp" alt="" style="--top:40%; --edge:-14%;">
+      <img class="loader__cloud" src="assets/img/deco/awan-kiri-ornamen.webp" alt="" style="--top:64%; --edge:-24%;">
+      <img class="loader__cloud" src="assets/img/deco/awan-polos-1.webp" alt="" style="--top:88%; --edge:-16%;">
+      <img class="loader__cloud loader__cloud--outer" src="assets/img/deco/awan-polos-2.webp" alt="" style="--top:4%;">
+      <img class="loader__cloud loader__cloud--outer" src="assets/img/deco/awan-polos-2.webp" alt="" style="--top:48%;">
+      <img class="loader__cloud loader__cloud--outer" src="assets/img/deco/awan-kiri-ornamen.webp" alt="" style="--top:80%;">
+    </div>
+    <div class="loader__half loader__half--right" aria-hidden="true">
+      <img class="loader__cloud" src="assets/img/deco/awan-polos-2.webp" alt="" style="--top:-20%; --edge:-20%;">
+      <img class="loader__cloud" src="assets/img/deco/awan-kanan-ornamen.webp" alt="" style="--top:4%; --edge:-14%;">
+      <img class="loader__cloud" src="assets/img/deco/awan-polos-2.webp" alt="" style="--top:28%; --edge:-24%;">
+      <img class="loader__cloud" src="assets/img/deco/awan-kanan-ornamen.webp" alt="" style="--top:52%; --edge:-16%;">
+      <img class="loader__cloud" src="assets/img/deco/awan-polos-2.webp" alt="" style="--top:76%; --edge:-22%;">
+      <img class="loader__cloud loader__cloud--outer" src="assets/img/deco/awan-polos-1.webp" alt="" style="--top:-6%;">
+      <img class="loader__cloud loader__cloud--outer" src="assets/img/deco/awan-kanan-ornamen.webp" alt="" style="--top:36%;">
+      <img class="loader__cloud loader__cloud--outer" src="assets/img/deco/awan-polos-1.webp" alt="" style="--top:70%;">
+    </div>
+
+    <div class="loader__center" aria-hidden="true">
+      <img class="loader__logo" src="assets/img/deco/logo-pesta-rakyat.webp" alt="" width="1000" height="759">
+    </div>
+  </div>
 
   <!-- ============ NAVBAR (menempel di atas) ============ -->
   <header class="navbar">
@@ -82,24 +113,24 @@
 
     <!-- ============ GAP: running text ============ -->
     <div class="gap marquee">
-      <p class="sr-only">Pesta Rakyat 2026 • Rayakan Pesta Mu</p>
+      <p class="sr-only">Pesta Rakyat 2026 • RAYAKAN CERITAMU</p>
       <!-- 2 grup identik: grup ke-2 menyambung grup pertama supaya loop tidak putus -->
       <div class="marquee__track" aria-hidden="true">
         <div class="marquee__group">
           <span>PESTA RAKYAT 2026</span><span class="marquee__dot">•</span>
-          <span>RAYAKAN PESTA MU</span><span class="marquee__dot">•</span>
+          <span>RAYAKAN CERITAMU</span><span class="marquee__dot">•</span>
           <span>PESTA RAKYAT 2026</span><span class="marquee__dot">•</span>
-          <span>RAYAKAN PESTA MU</span><span class="marquee__dot">•</span>
+          <span>RAYAKAN CERITAMU</span><span class="marquee__dot">•</span>
           <span>PESTA RAKYAT 2026</span><span class="marquee__dot">•</span>
-          <span>RAYAKAN PESTA MU</span><span class="marquee__dot">•</span>
+          <span>RAYAKAN CERITAMU</span><span class="marquee__dot">•</span>
         </div>
         <div class="marquee__group">
           <span>PESTA RAKYAT 2026</span><span class="marquee__dot">•</span>
-          <span>RAYAKAN PESTA MU</span><span class="marquee__dot">•</span>
+          <span>RAYAKAN CERITAMU</span><span class="marquee__dot">•</span>
           <span>PESTA RAKYAT 2026</span><span class="marquee__dot">•</span>
-          <span>RAYAKAN PESTA MU</span><span class="marquee__dot">•</span>
+          <span>RAYAKAN CERITAMU</span><span class="marquee__dot">•</span>
           <span>PESTA RAKYAT 2026</span><span class="marquee__dot">•</span>
-          <span>RAYAKAN PESTA MU</span><span class="marquee__dot">•</span>
+          <span>RAYAKAN CERITAMU</span><span class="marquee__dot">•</span>
         </div>
       </div>
     </div>
@@ -166,12 +197,12 @@
     <footer class="footer" id="info">
       <img class="footer__bg" src="assets/img/bg/footer-2400.webp"
            srcset="assets/img/bg/footer-1200.webp 1200w, assets/img/bg/footer-2400.webp 2400w" sizes="100vw"
-           width="2400" height="900" alt="See you on 8 November 2026 at PFN Heritage" loading="lazy">
+           width="2400" height="897" alt="See you on 8 November 2026 at PFN Heritage" loading="lazy">
 
       <a class="hotspot hotspot--pill" href="https://www.instagram.com/perak.jakarta/" target="_blank" rel="noopener"
-         style="--x:36.2%; --y:81.9%; --w:22.4%; --h:10.8%;" aria-label="Instagram @perak.jakarta"></a>
+         style="--x:36.2%; --y:81.9%; --w:22.0%; --h:10.7%;" aria-label="Instagram @perak.jakarta"></a>
       <a class="hotspot hotspot--pill" href="https://www.tiktok.com/@perak.jkt" target="_blank" rel="noopener"
-         style="--x:59.3%; --y:81.9%; --w:18.9%; --h:10.8%;" aria-label="TikTok @perak.jkt"></a>
+         style="--x:59.3%; --y:82.1%; --w:19.0%; --h:10.7%;" aria-label="TikTok @perak.jkt"></a>
     </footer>
 
     <!-- ============ RUNNING TEXT BAWAH ============ -->

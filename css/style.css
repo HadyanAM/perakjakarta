@@ -273,27 +273,35 @@ img { display: block; max-width: 100%; }
             mask-image: linear-gradient(transparent, #000 10%);
   }
 
-  /* bagian tengah: sisi ungu polos + kotak kuning (baris 680–880 gambar)
-     yang di-stretch vertikal sepanjang teks */
+  /* bagian tengah: kotak kuning (baris 680–880 gambar) di-stretch vertikal
+     sepanjang teks. Sisi kanan ungu polos; sisi kiri diberi gradasi terang
+     karena di gambar asli ada cahaya dari bintang kiri bawah. */
   .about__mid {
     position: relative;
     inset: auto;
     display: block;
     margin-top: -1.36%;
+    background:
+      linear-gradient(var(--purple), var(--purple)) right / 50% 100% no-repeat,
+      linear-gradient(#8e59a3, #b08abe);
   }
 
+  /* garis kotak di gambar: kiri 11.4%, kanan 86.2% (tidak simetris) */
   .about__mid::before {
     content: "";
     position: absolute;
-    inset: 0 13.7%;
-    background: var(--about-img) 50% 40.28% / 137.74% 944% no-repeat;
+    top: 0;
+    bottom: 0;
+    left: 11.1%;
+    right: 13.5%;
+    background: var(--about-img) 45.12% 40.28% / 132.63% 944% no-repeat;
   }
 
   /* z-index 2: teks di atas potongan bawah; kiri 19.5% supaya tidak kena mic */
   .about__text {
     position: relative;
     z-index: 2;
-    padding: 2.9% 17.5% 0 19.5%;
+    padding: 2.9% 16% 0 19.5%;
     font-size: 15px;
     line-height: 1.6;
     font-weight: 500;
@@ -304,13 +312,8 @@ img { display: block; max-width: 100%; }
   .about { --about-img: url("../assets/img/bg/about-1200.webp"); }
 }
 
-/* HP: kotak dizoom supaya teks lebih lebar & judul lebih besar */
+/* HP: teks lebih kecil & rata kiri (kotak tidak dizoom supaya mic & bintang utuh) */
 @media (max-width: 600px) {
-  .about__frame {
-    width: 128%;
-    margin-left: -14%;
-  }
-
   .about__text {
     font-size: 14px;
     text-align: left;
@@ -453,6 +456,105 @@ img { display: block; max-width: 100%; }
   outline: none;
   box-shadow: 0 0 0 3px #fff;
 }
+
+/* =================== LOADER =================== */
+/* Tampil hanya kalau JS aktif (kelas .js dipasang di <head>) */
+.loader { display: none; }
+
+.js .loader {
+  --loader-bg: #f7f2ea; /* warna awan */
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  background-color: var(--loader-bg);
+  transition: background-color 0.6s ease 0.5s;
+}
+
+/* kunci scroll selama loading */
+html.is-loading { overflow: hidden; }
+
+.loader__half {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+}
+
+.loader__half--left { left: 0; z-index: 2; }
+.loader__half--right { right: 0; z-index: 1; }
+
+.loader__cloud {
+  position: absolute;
+  top: var(--top);
+  height: max(min(34vh, 55vw), 150px);
+  width: auto;
+  max-width: none;
+  transition:
+    translate 1.3s cubic-bezier(0.7, 0, 0.2, 1),
+    scale 1.3s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+/* awan di tengah (garis sambungan) sedikit melewati batas tengah */
+.loader__half--left .loader__cloud { right: var(--edge); }
+.loader__half--right .loader__cloud { left: var(--edge); }
+
+/* awan pinggir */
+.loader__half--left .loader__cloud--outer { right: auto; left: -20%; }
+.loader__half--right .loader__cloud--outer { left: auto; right: -20%; }
+
+/* awan mulai membelah setelah logo selesai fade out (±0.35s) */
+.loader__cloud { transition-delay: 0.35s; }
+.loader__cloud:nth-child(even) { transition-delay: 0.43s; }
+.loader__cloud--outer { transition-delay: 0.49s; }
+
+/* ---- membuka: awan kiri ke kiri, awan kanan ke kanan ---- */
+.loader.is-open {
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.loader.is-open .loader__half--left .loader__cloud { translate: -160vw 0; scale: 1.15; }
+.loader.is-open .loader__half--right .loader__cloud { translate: 160vw 0; scale: 1.15; }
+
+/* ---- logo di tengah (fade out sebelum awan membelah) ---- */
+.loader__center {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.4s ease, scale 0.4s ease;
+}
+
+.loader__center::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(95vw, 640px);
+  height: min(95vw, 640px);
+  translate: -50% -50%;
+  z-index: -1;
+  background: radial-gradient(closest-side, var(--loader-bg) 55%, transparent);
+}
+
+.loader.is-open .loader__center { opacity: 0; scale: 0.92; }
+
+.loader__logo {
+  width: min(62vw, 500px);
+  height: auto;
+  filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.12));
+  animation: logo-breathe 1.8s ease-in-out infinite;
+}
+
+/* logo "bernapas" pelan selama loading */
+@keyframes logo-breathe {
+  0%, 100% { scale: 1; rotate: -2deg; }
+  50% { scale: 1.06; rotate: 2deg; }
+}
+
 
 /* =================== NAVBAR =================== */
 .navbar {

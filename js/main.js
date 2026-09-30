@@ -85,3 +85,29 @@ if (menuBtn && drawer) {
     link.addEventListener('click', () => closeMenu({ returnFocus: false }));
   });
 }
+
+// ---------- Loader: awan membelah saat halaman selesai dimuat ----------
+const loader = document.querySelector('.loader');
+
+if (loader) {
+  const MIN_SHOW = 1200; // ms, supaya animasi sempat terlihat walau loading cepat
+  let opened = false;
+
+  const openLoader = () => {
+    if (opened) return;
+    opened = true;
+    const wait = Math.max(0, MIN_SHOW - performance.now());
+
+    setTimeout(() => {
+      loader.classList.add('is-open');
+      document.documentElement.classList.remove('is-loading');
+      setTimeout(() => loader.remove(), reduceMotion ? 0 : 2200);
+    }, wait);
+  };
+
+  if (document.readyState === 'complete') openLoader();
+  else window.addEventListener('load', openLoader, { once: true });
+
+  // jaga-jaga kalau ada gambar yang lama sekali dimuat
+  setTimeout(openLoader, 8000);
+}
