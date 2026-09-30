@@ -1,0 +1,739 @@
+/* =========================================================
+   PESTA RAKYAT 2026 — Landing Page
+   Semua posisi elemen memakai % dari section-nya, jadi layout
+   ikut menyusut/membesar persis seperti desain Canva.
+   ========================================================= */
+
+:root {
+  --yellow: #f9c13f;
+  --cream: #fcfaf5;
+  --purple: #7b3c93;
+  --blue: #4060ce;
+  --red: #d7261e;
+  --ink: #1d1d1b;
+  --box-yellow: #ffdd85;
+  --ticket: #f6f0e2;
+
+  --font: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* tinggi celah running text (cqw = % lebar halaman) */
+  --gap-h: clamp(44px, 5.6cqw, 130px);
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.page {
+  overflow-x: hidden;
+  container-type: inline-size;
+}
+
+/* Semua section = poster: tinggi mengikuti lebar (aspect ratio gambar) */
+.hero,
+.highlights,
+.footer {
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.hero__bg,
+.highlights__bg,
+.footer__bg {
+  width: 100%;
+  height: auto;
+}
+
+/* Elemen yang ditempel di atas poster.
+   --x / --y = posisi kiri-atas (% dari section), --w = lebar (% dari section) */
+.deco,
+.hl-btn,
+.hotspot {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+}
+
+.deco { pointer-events: none; user-select: none; }
+
+/* =================== HERO =================== */
+/* Tinggi hero = tinggi asli gambar, TAPI maksimal 1 layar dikurangi running text.
+   Di desktop gambar jadi lebih kecil & di tengah; sisi kiri-kanan diisi tekstur
+   kuning dari gambar yang sama, awan tetap menempel di tepi layar. */
+.hero {
+  --hero-h: min(69.5417cqw, calc(100vh - var(--gap-h)));
+  --stage-w: calc(var(--hero-h) * 1.43799); /* 2400 / 1669 */
+  height: var(--hero-h);
+  background: var(--yellow) url("../assets/img/bg/hero-2400.webp") center bottom / cover no-repeat;
+}
+
+@supports (height: 100svh) {
+  .hero { --hero-h: min(69.5417cqw, calc(100svh - var(--gap-h))); }
+}
+
+@media (max-width: 800px) {
+  .hero { background-image: url("../assets/img/bg/hero-1200.webp"); }
+}
+
+.hero__stage {
+  position: relative;
+  width: var(--stage-w);
+  height: 100%;
+  margin: 0 auto;
+}
+
+/* pinggir gambar di-fade supaya menyatu dengan tekstur di sisi */
+.hero__stage .hero__bg {
+  height: 100%;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+/* garis hitam bawah (+ sedikit krem) selebar layar, menimpa garis di gambar */
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  height: 0.81%;
+  background: linear-gradient(#000 0 54%, var(--cream) 54%);
+}
+
+.cloud {
+  position: absolute;
+  top: var(--y);
+  width: calc(var(--stage-w) * var(--s));
+  pointer-events: none;
+  user-select: none;
+}
+
+.cloud--left { left: calc(var(--stage-w) * var(--off)); }
+.cloud--right { right: calc(var(--stage-w) * var(--off)); }
+
+/* awan bergerak halus saat scroll (diatur di main.js) */
+.hero .float { transform: translateY(var(--py, 0px)); }
+
+/* =================== GAP =================== */
+.gap {
+  height: var(--gap-h);
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ---------- Running text ---------- */
+.marquee {
+  --marquee-color: #d91607;
+  --marquee-speed: 40s; /* makin kecil = makin cepat */
+}
+
+/* running text paling bawah: biru, tulisan putih */
+.marquee--bottom {
+  --marquee-color: #fff;
+  height: var(--gap-h);
+  background: var(--blue);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-speed) linear infinite;
+}
+
+/* berhenti saat kursor diarahkan ke running text */
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+.marquee__group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.marquee__group span {
+  padding: 0 0.45em;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: clamp(18px, 2.4vw, 54px);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--marquee-color);
+  white-space: nowrap;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* =================== ABOUT =================== */
+/* Desktop: gambar About utuh, teks ditaruh di dalam kotak kuning */
+.about {
+  --about-img: url("../assets/img/bg/about-2400.webp");
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 5000 / 1888;
+  background: var(--purple) var(--about-img) top center / 100% auto no-repeat;
+}
+
+.about__top,
+.about__bot { display: none; }
+
+.about__mid {
+  position: absolute;
+  top: 33%;
+  bottom: 12%;
+  left: 18.5%;
+  right: 17%;
+  display: flex;
+  align-items: center;
+}
+
+.about__text {
+  font-size: 1.05cqw;
+  line-height: 1.38;
+  font-weight: 600;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.about__text p { margin: 0 0 0.85em; }
+.about__text p:last-child { margin-bottom: 0; }
+.about__text em { font-weight: 700; font-style: italic; }
+
+/* Tablet & HP: kotak kuning dibuat memanjang mengikuti panjang teks.
+   Gambar About dipotong 3 bagian (atas / tengah yg di-stretch / bawah). */
+@media (max-width: 1099px) {
+  .about {
+    aspect-ratio: auto;
+    background: var(--purple);
+    overflow: hidden;
+  }
+
+  .about__frame { width: 100%; }
+
+  .about__top,
+  .about__bot {
+    display: block;
+    position: relative;
+    z-index: 1;
+    background-image: var(--about-img);
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+  }
+
+  /* baris 0–680 dari gambar: judul "ABOUT PERAK 2026".
+     10% bawahnya di-fade supaya tekstur ungu menyatu dengan sisi polos. */
+  .about__top {
+    aspect-ratio: 5000 / 680;
+    background-position: 50% 0;
+    -webkit-mask-image: linear-gradient(#000 90%, transparent);
+            mask-image: linear-gradient(#000 90%, transparent);
+  }
+
+  /* baris 880–1888: bagian bawah kotak + mic + bintang (10% atasnya di-fade).
+     Ditarik ke atas sampai ±baris 1400 supaya teks turun ke samping mic
+     dan tidak ada ruang kuning kosong yang besar. */
+  .about__bot {
+    aspect-ratio: 5000 / 1008;
+    margin-top: -10.4%;
+    background-position: 50% 100%;
+    -webkit-mask-image: linear-gradient(transparent, #000 10%);
+            mask-image: linear-gradient(transparent, #000 10%);
+  }
+
+  /* bagian tengah: sisi ungu polos + kotak kuning (baris 680–880 gambar)
+     yang di-stretch vertikal sepanjang teks */
+  .about__mid {
+    position: relative;
+    inset: auto;
+    display: block;
+    margin-top: -1.36%;
+  }
+
+  .about__mid::before {
+    content: "";
+    position: absolute;
+    inset: 0 13.7%;
+    background: var(--about-img) 50% 40.28% / 137.74% 944% no-repeat;
+  }
+
+  /* z-index 2: teks di atas potongan bawah; kiri 19.5% supaya tidak kena mic */
+  .about__text {
+    position: relative;
+    z-index: 2;
+    padding: 2.9% 17.5% 0 19.5%;
+    font-size: 15px;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 800px) {
+  .about { --about-img: url("../assets/img/bg/about-1200.webp"); }
+}
+
+/* HP: kotak dizoom supaya teks lebih lebar & judul lebih besar */
+@media (max-width: 600px) {
+  .about__frame {
+    width: 128%;
+    margin-left: -14%;
+  }
+
+  .about__text {
+    font-size: 14px;
+    text-align: left;
+    hyphens: manual;
+  }
+}
+
+/* =================== EVENT HIGHLIGHTS =================== */
+.highlights { background: var(--blue); }
+
+.hl-title {
+  position: absolute;
+  left: 35.8%;
+  top: 5.4%;
+  width: 30.8%;
+  margin: 0;
+}
+
+.hl-title img { width: 100%; }
+
+/* Tombol ditaruh persis di atas gambar tombol di background,
+   jadi saat di-hover hanya membesar (tidak "dobel"). */
+.hl-btn {
+  transition: scale 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s;
+}
+
+.hl-btn img { width: 100%; }
+
+.hl-btn:hover {
+  scale: 1.07;
+  filter: drop-shadow(0 0.6cqw 0 rgba(0, 0, 0, 0.25)) brightness(1.05);
+}
+
+/* ---------- Tiket ---------- */
+.ticket {
+  position: absolute;
+  left: 24.5%;
+  top: 55.5%;
+  width: 52%;
+  aspect-ratio: 2.45;
+  rotate: -3deg;
+  display: block;
+  filter: drop-shadow(0 0.7cqw 0 rgba(20, 30, 90, 0.35));
+  transition: rotate 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ticket:hover,
+.ticket:focus-visible {
+  rotate: 0deg;
+  scale: 1.04;
+}
+
+.ticket:focus-visible { outline: none; }
+.ticket:focus-visible .ticket__body { outline: 0.4cqw solid #fff; outline-offset: 0.4cqw; }
+
+.ticket__body {
+  --notch: 2.2cqw;
+  --cut: 78%;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow: hidden;
+  border-radius: 1.4cqw;
+  background:
+    linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.7) 50%, transparent 60%) -200% 0 / 200% 100% no-repeat,
+    var(--ticket);
+  /* lekukan setengah lingkaran di atas & bawah garis sobekan */
+  -webkit-mask:
+    radial-gradient(circle at var(--cut) 0, transparent var(--notch), #000 calc(var(--notch) + 1px)) top / 100% 51% no-repeat,
+    radial-gradient(circle at var(--cut) 100%, transparent var(--notch), #000 calc(var(--notch) + 1px)) bottom / 100% 51% no-repeat;
+          mask:
+    radial-gradient(circle at var(--cut) 0, transparent var(--notch), #000 calc(var(--notch) + 1px)) top / 100% 51% no-repeat,
+    radial-gradient(circle at var(--cut) 100%, transparent var(--notch), #000 calc(var(--notch) + 1px)) bottom / 100% 51% no-repeat;
+}
+
+/* kilau lewat saat hover */
+.ticket:hover .ticket__body {
+  background-position: 200% 0, 0 0;
+  transition: background-position 0.8s ease;
+}
+
+.ticket__main {
+  flex: 0 0 var(--cut);
+  display: grid;
+  place-items: center;
+  padding: 0 6%;
+}
+
+.ticket__main img {
+  width: 92%;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+.ticket__stub {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6%;
+  /* garis sobekan titik-titik */
+  background: radial-gradient(circle, #33408f 0.28cqw, transparent 0.3cqw) left center / 1cqw 1.5cqw repeat-y;
+}
+
+.ticket__barcode {
+  width: 36%;
+  height: 78%;
+  background:
+    repeating-linear-gradient(to bottom,
+      var(--ink) 0 0.25cqw, transparent 0.25cqw 0.45cqw,
+      var(--ink) 0.45cqw 0.55cqw, transparent 0.55cqw 0.8cqw,
+      var(--ink) 0.8cqw 1.15cqw, transparent 1.15cqw 1.3cqw,
+      var(--ink) 1.3cqw 1.4cqw, transparent 1.4cqw 1.65cqw);
+}
+
+.ticket__number {
+  writing-mode: vertical-rl;
+  font-size: 1.05cqw;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+
+/* =================== FOOTER =================== */
+.footer { background: var(--red); }
+
+/* area klik transparan di atas tombol yang sudah ada di gambar */
+.hotspot {
+  height: var(--h);
+  border-radius: 999px;
+  transition: background-color 0.2s, box-shadow 0.2s, scale 0.2s;
+}
+
+.hotspot:hover {
+  background: rgba(255, 255, 255, 0.18);
+  scale: 1.04;
+}
+
+.hotspot:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px #fff;
+}
+
+/* =================== NAVBAR =================== */
+.navbar {
+  position: fixed;
+  top: 16px;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none; /* area kosong di tengah tidak menghalangi klik */
+}
+
+.navbar > * { pointer-events: auto; }
+
+/* tombol hamburger: menempel di tepi kiri */
+.menu-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 13px 22px 13px 20px;
+  background: var(--yellow);
+  border: 2.5px solid var(--ink);
+  border-left: 0;
+  border-radius: 0 16px 16px 0;
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+  transition: padding 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s;
+}
+
+.menu-btn:hover { padding-left: 28px; background: #ffd35c; }
+
+.menu-btn__line {
+  display: block;
+  width: 26px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--red);
+}
+
+/* tombol beli tiket: pill biru di kanan */
+.buy-btn {
+  margin-right: 16px;
+  padding: 10px 20px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: translate 0.15s, box-shadow 0.15s, background-color 0.2s;
+}
+
+.buy-btn:hover { background: var(--red); }
+
+.buy-btn:active,
+.menu-btn:active {
+  translate: 2px 2px;
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.menu-btn:focus-visible,
+.buy-btn:focus-visible,
+.drawer a:focus-visible,
+.drawer__close:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+/* ---------- Drawer menu ---------- */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  background: rgba(20, 16, 40, 0.35);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.drawer-backdrop.is-open { opacity: 1; }
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  width: min(80vw, 400px);
+  overflow-y: auto;
+  background: var(--yellow);
+  border-right: 3px solid var(--ink);
+  border-bottom-right-radius: 28px;
+  box-shadow: 6px 0 0 rgba(0, 0, 0, 0.18);
+  transform: translateX(-105%);
+  visibility: hidden;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s 0.4s;
+}
+
+.drawer.is-open {
+  transform: none;
+  visibility: visible;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
+}
+
+.drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 22px 28px 18px 24px;
+  padding-bottom: 12px;
+  border-bottom: 2.5px solid var(--ink);
+}
+
+.drawer__title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.drawer__close {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  color: var(--ink);
+  background: #fff;
+  border: 2.5px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 2px 2px 0 var(--ink);
+  cursor: pointer;
+  transition: rotate 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.drawer__close:hover { rotate: 90deg; scale: 1.1; }
+
+.drawer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.drawer__list li {
+  margin: 0 28px 16px 24px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.drawer__list a {
+  display: block;
+  padding: 4px 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.2s, translate 0.2s;
+}
+
+.drawer__list a:hover { color: var(--red); translate: 6px 0; }
+
+.drawer__footer {
+  margin: auto 28px 0 24px;
+  padding: 24px 0 32px;
+}
+
+.drawer__footer p {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.drawer__buy {
+  display: inline-block;
+  padding: 11px 28px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  border: 2.5px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: background-color 0.2s;
+}
+
+.drawer__buy:hover { background: var(--red); }
+
+/* kunci scroll halaman saat menu terbuka */
+body.menu-open { overflow: hidden; }
+
+/* lompat ke tiket: taruh kartunya agak ke tengah layar */
+#tickets { scroll-margin-top: 30vh; }
+
+@media (max-width: 700px) {
+  .navbar { top: 10px; }
+  .menu-btn { padding: 11px 18px 11px 16px; gap: 4px; }
+  .menu-btn__line { width: 22px; }
+  .buy-btn { margin-right: 12px; padding: 8px 14px; font-size: 11px; }
+}
+
+/* HP kecil: tombol BUY TICKETS bersinggungan dengan tulisan PRESENT,
+   jadi gambar hero diturunkan secukupnya saja (±17–25px, makin sempit makin besar).
+   Di atas 520px tombol sudah tidak kena tulisan, jadi tidak perlu ruang tambahan. */
+@media (max-width: 520px) {
+  .hero {
+    --hero-pad: calc(50px - 6.26cqw);
+    height: calc(var(--hero-h) + var(--hero-pad));
+    padding-top: var(--hero-pad);
+    background-image: none;
+  }
+
+  .hero__stage .hero__bg {
+    -webkit-mask-image: linear-gradient(transparent, #000 7%);
+            mask-image: linear-gradient(transparent, #000 7%);
+  }
+}
+
+/* =================== ANIMASI =================== */
+/* --delay (inline di HTML) supaya tiap elemen tidak bergerak barengan */
+.float { animation: float 5s ease-in-out var(--delay, 0s) infinite; }
+.float--slow { animation-duration: 6.5s; }
+.bob { animation: bob 2.2s ease-in-out var(--delay, 0s) infinite; }
+.wiggle { animation: wiggle 2.6s ease-in-out var(--delay, 0s) infinite; }
+
+/* awan: melayang naik-turun sambil geser & miring sedikit */
+@keyframes float {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  25% { translate: 2.5% -5%; rotate: -2deg; }
+  50% { translate: 0 -9%; rotate: 0deg; }
+  75% { translate: -2.5% -5%; rotate: 2deg; }
+}
+
+/* not musik: loncat & goyang */
+@keyframes bob {
+  0%, 100% { translate: 0 0; rotate: -14deg; }
+  50% { translate: 0 -35%; rotate: 14deg; }
+}
+
+/* bunga: goyang kiri-kanan sambil membesar */
+@keyframes wiggle {
+  0%, 100% { rotate: -18deg; scale: 1; }
+  50% { rotate: 18deg; scale: 1.12; }
+}
+
+@keyframes pulse {
+  0%, 100% { scale: 1; }
+  50% { scale: 1.05; }
+}
+
+/* muncul saat di-scroll (kelas .js ditambahkan oleh main.js) */
+.js .reveal {
+  opacity: 0;
+  translate: 0 40px;
+  transition: opacity 0.7s ease, translate 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--d, 0ms);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+  translate: 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .js .reveal { opacity: 1; translate: none; }
+  /* running text tetap jalan */
+  .marquee__track { animation: marquee var(--marquee-speed) linear infinite !important; }
+  .marquee:hover .marquee__track { animation-play-state: paused !important; }
+}
