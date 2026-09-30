@@ -111,3 +111,41 @@ if (loader) {
   // jaga-jaga kalau ada gambar yang lama sekali dimuat
   setTimeout(openLoader, 8000);
 }
+
+// ---------- About (HP): teks turun ke samping mic ----------
+// Float di awal teks setinggi teks itu sendiri; bagian bawahnya (shape-outside)
+// membuat baris di samping mic menjorok. Karena baris yang menjorok bisa menambah
+// tinggi teks, tinggi float dihitung ulang sampai stabil.
+const aboutText = document.querySelector('.about__text');
+const aboutMobile = window.matchMedia('(max-width: 700px)');
+
+const fitAboutText = () => {
+  if (!aboutText) return;
+  aboutText.style.setProperty('--wrap-h', '0px');
+  if (!aboutMobile.matches) return;
+
+  const padTop = parseFloat(getComputedStyle(aboutText).paddingTop);
+  let h = 0;
+  for (let i = 0; i < 8; i++) {
+    const content = aboutText.clientHeight - padTop;
+    if (content <= h + 0.5) break;
+    h = Math.ceil(content);
+    aboutText.style.setProperty('--wrap-h', `${h}px`);
+  }
+};
+
+if (aboutText) {
+  let lastWidth = 0;
+  let queued = false;
+  const queueFit = (force = false) => {
+    if (!force && window.innerWidth === lastWidth) return;
+    lastWidth = window.innerWidth;
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; fitAboutText(); });
+  };
+
+  queueFit(true);
+  window.addEventListener('resize', () => queueFit());
+  if (document.fonts) document.fonts.ready.then(() => queueFit(true));
+}

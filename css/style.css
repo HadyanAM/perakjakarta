@@ -198,131 +198,176 @@ img { display: block; max-width: 100%; }
 }
 
 /* =================== ABOUT =================== */
-/* Desktop: gambar About utuh, teks ditaruh di dalam kotak kuning */
+/* Kotak kuning dibuat memanjang mengikuti panjang teks (semua ukuran layar).
+   Gambar About dipotong 3 bagian: atas (judul) / tengah (di-stretch) / bawah (mic & bintang).
+   Posisi di gambar (about-new, 5000×1888 setelah ditambah 6px di atas):
+   garis kotak kiri 12.9–13.2%, kanan 87.8–88.1% (tengah kotak 50.49%),
+   mic 12.4–18.8% (baris 1040–1680), bunga 92.1–96.7% (baris 1156–1376). */
 .about {
-  --about-img: url("../assets/img/bg/about-2400.webp");
+  --about-img: url("../assets/img/bg/about2-2400.webp");
+  --about-scale: 1.015;    /* gambar diperbesar sedikit supaya kotak pas di tengah layar */
+  --bot-overlap: 15.2cqw;  /* seberapa jauh potongan bawah naik menimpa bagian tengah */
   position: relative;
   container-type: inline-size;
-  aspect-ratio: 5000 / 1888;
-  background: var(--purple) var(--about-img) top center / 100% auto no-repeat;
+  overflow: hidden;
+  background: var(--purple);
+}
+
+/* Tengah kotak di gambar = 50.49%, jadi seluruh gambar diperbesar
+   --about-scale lalu digeser supaya tengah kotak = tengah layar. */
+.about__frame {
+  width: calc(var(--about-scale) * 100%);
+  margin-left: calc(50% - var(--about-scale) * 50.49%);
 }
 
 .about__top,
-.about__bot { display: none; }
-
-.about__mid {
-  position: absolute;
-  top: 33%;
-  bottom: 12%;
-  left: 18.5%;
-  right: 17%;
-  display: flex;
-  align-items: center;
+.about__bot {
+  position: relative;
+  z-index: 1;
+  background-image: var(--about-img);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
 }
 
+/* baris 0–680 dari gambar: judul "ABOUT PERAK 2026".
+   10% bawahnya di-fade supaya tekstur ungu menyatu dengan sisi polos. */
+.about__top {
+  aspect-ratio: 5000 / 680;
+  background-position: 50% 0;
+  -webkit-mask-image: linear-gradient(#000 90%, transparent);
+          mask-image: linear-gradient(#000 90%, transparent);
+}
+
+/* baris 880–1888: bagian bawah kotak + mic + bintang (10% atasnya di-fade) */
+.about__bot {
+  aspect-ratio: 5000 / 1008;
+  margin-top: calc(-1 * var(--bot-overlap) * var(--about-scale));
+  background-position: 50% 100%;
+  -webkit-mask-image: linear-gradient(transparent, #000 10%);
+          mask-image: linear-gradient(transparent, #000 10%);
+}
+
+/* bagian tengah: kotak kuning (baris 680–880 gambar) di-stretch vertikal
+   sepanjang teks. Sisi kanan ungu polos; sisi kiri diberi gradasi terang
+   karena di gambar asli ada cahaya dari bintang kiri bawah. */
+.about__mid {
+  position: relative;
+  margin-top: -1.36%;
+  min-height: 17cqw; /* jaga-jaga di layar sangat lebar (teks pendek) */
+  background:
+    linear-gradient(var(--purple), var(--purple)) right / 50% 100% no-repeat,
+    linear-gradient(#8e59a3, #bc9cc8 calc(100% - var(--bot-overlap) * var(--about-scale)));
+}
+
+.about__mid::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 12.85%;
+  right: 11.8%;
+  background: var(--about-img) 52.13% 40.28% / 132.71% 944% no-repeat;
+}
+
+/* Teks di tengah kotak: jarak ke garis kiri & kanan sama (8.1%),
+   sekaligus memberi ruang untuk mic. z-index 2 = di atas potongan bawah. */
 .about__text {
-  font-size: 1.05cqw;
-  line-height: 1.38;
-  font-weight: 600;
+  position: relative;
+  z-index: 2;
+  padding: 0.8% 20.2% 0 21.2%;
+  font-size: clamp(15px, 1.12vw, 19px);
+  line-height: 1.6;
+  font-weight: 500;
+  /* rata kiri-kanan; pemenggalan kata (lang="en") mengurangi celah lebar antar kata */
   text-align: justify;
-  hyphens: auto;
+  -webkit-hyphens: auto;
+          hyphens: auto;
 }
 
 .about__text p { margin: 0 0 0.85em; }
 .about__text p:last-child { margin-bottom: 0; }
 .about__text em { font-weight: 700; font-style: italic; }
 
-/* Tablet & HP: kotak kuning dibuat memanjang mengikuti panjang teks.
-   Gambar About dipotong 3 bagian (atas / tengah yg di-stretch / bawah). */
-@media (max-width: 1099px) {
-  .about {
-    aspect-ratio: auto;
-    background: var(--purple);
-    overflow: hidden;
-  }
-
-  .about__frame { width: 100%; }
-
-  .about__top,
-  .about__bot {
-    display: block;
-    position: relative;
-    z-index: 1;
-    background-image: var(--about-img);
-    background-repeat: no-repeat;
-    background-size: 100% auto;
-  }
-
-  /* baris 0–680 dari gambar: judul "ABOUT PERAK 2026".
-     10% bawahnya di-fade supaya tekstur ungu menyatu dengan sisi polos. */
-  .about__top {
-    aspect-ratio: 5000 / 680;
-    background-position: 50% 0;
-    -webkit-mask-image: linear-gradient(#000 90%, transparent);
-            mask-image: linear-gradient(#000 90%, transparent);
-  }
-
-  /* baris 880–1888: bagian bawah kotak + mic + bintang (10% atasnya di-fade).
-     Ditarik ke atas sampai ±baris 1400 supaya teks turun ke samping mic
-     dan tidak ada ruang kuning kosong yang besar. */
-  .about__bot {
-    aspect-ratio: 5000 / 1008;
-    margin-top: -10.4%;
-    background-position: 50% 100%;
-    -webkit-mask-image: linear-gradient(transparent, #000 10%);
-            mask-image: linear-gradient(transparent, #000 10%);
-  }
-
-  /* bagian tengah: kotak kuning (baris 680–880 gambar) di-stretch vertikal
-     sepanjang teks. Sisi kanan ungu polos; sisi kiri diberi gradasi terang
-     karena di gambar asli ada cahaya dari bintang kiri bawah. */
-  .about__mid {
-    position: relative;
-    inset: auto;
-    display: block;
-    margin-top: -1.36%;
-    background:
-      linear-gradient(var(--purple), var(--purple)) right / 50% 100% no-repeat,
-      linear-gradient(#8e59a3, #b08abe);
-  }
-
-  /* garis kotak di gambar: kiri 11.4%, kanan 86.2% (tidak simetris) */
-  .about__mid::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 11.1%;
-    right: 13.5%;
-    background: var(--about-img) 45.12% 40.28% / 132.63% 944% no-repeat;
-  }
-
-  /* z-index 2: teks di atas potongan bawah; kiri 19.5% supaya tidak kena mic */
-  .about__text {
-    position: relative;
-    z-index: 2;
-    padding: 2.9% 16% 0 19.5%;
-    font-size: 15px;
-    line-height: 1.6;
-    font-weight: 500;
-  }
-}
-
 @media (max-width: 800px) {
-  .about { --about-img: url("../assets/img/bg/about-1200.webp"); }
+  .about { --about-img: url("../assets/img/bg/about2-1200.webp"); }
 }
 
-/* HP: teks lebih kecil & rata kiri (kotak tidak dizoom supaya mic & bintang utuh) */
-@media (max-width: 600px) {
+/* bunga pengganti & ruang di samping mic (khusus HP, lihat di bawah) */
+.about__flower,
+.about__wrap { display: none; }
+
+/* HP: gambar diperbesar 10% supaya kotak lebih lebar (tetap di tengah).
+   Bunga pink di gambar ikut terpotong, jadi pakai gambar tanpa bunga
+   (about2-m-1200) + bunga terpisah yang digeser sedikit ke dalam layar.
+   Teks turun sampai dekat garis bawah kotak; baris di samping mic & lengkungan
+   sudut kanan bawah dibuat menjorok lewat float + shape-outside. Tinggi float
+   = tinggi teks (diatur main.js lewat --wrap-h), jadi area menjorok selalu
+   berada di bagian paling bawah teks. Ukuran dalam cqw = % lebar gambar × 1.1. */
+@media (max-width: 700px) {
+  .about {
+    --about-img: url("../assets/img/bg/about2-m-1200.webp");
+    --about-scale: 1.1;
+    --bot-overlap: 2.2cqw; /* tanpa JS: teks berhenti di atas mic */
+  }
+
+  .js .about { --bot-overlap: 14.7cqw; }
+
   .about__text {
+    display: flow-root; /* tinggi teks ikut menampung float */
+    padding: 1.6% 15.4% 0 16.4%;
     font-size: 14px;
-    text-align: left;
-    hyphens: manual;
+  }
+
+  .about__wrap {
+    display: block;
+    width: 5.06cqw;
+    height: var(--wrap-h, 0px);
+  }
+
+  /* mic: baris 1030–1714 gambar = 12.87cqw terbawah */
+  .about__wrap--l {
+    float: left;
+    shape-outside: inset(calc(100% - 12.87cqw) 0 0 0);
+  }
+
+  /* lengkungan sudut kanan bawah: baris 1390–1714 = 4.95cqw terbawah */
+  .about__wrap--r {
+    float: right;
+    shape-outside: inset(calc(100% - 4.95cqw) 0 0 0);
+  }
+
+  .about__flower {
+    display: block;
+    position: absolute;
+    left: 90.2%;
+    top: 27.4%;
+    width: 4.5%;
+    pointer-events: none;
   }
 }
 
 /* =================== EVENT HIGHLIGHTS =================== */
-.highlights { background: var(--blue); }
+/* overflow visible supaya bintang bisa menjorok ke section About */
+.highlights { background: var(--blue); overflow: visible; }
+
+/* bintang besar di perbatasan About & Event Highlights */
+.hl-star {
+  position: absolute;
+  top: 0;
+  right: 2%;
+  z-index: 5;
+  width: 16%;
+  height: auto;
+  translate: 0 -48%;
+  pointer-events: none;
+  user-select: none;
+  animation: star-sway 4s ease-in-out infinite;
+}
+
+@keyframes star-sway {
+  0%, 100% { rotate: -6deg; scale: 1; }
+  50% { rotate: 6deg; scale: 1.05; }
+}
 
 .hl-title {
   position: absolute;
